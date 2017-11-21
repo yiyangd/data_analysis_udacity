@@ -1,0 +1,205 @@
+RedWineEDA by YiyangDong
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using
+# in your analysis in this code chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk.
+# This prevents the code from displaying in the knitted HTML output.
+# You should set echo=FALSE for all code chunks in your file.
+
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(gridExtra)
+library(GGally)
+library(dplyr)
+theme_set(theme_minimal(11))
+```
+
+```{r echo=FALSE, Load_the_Data}
+# Load the Data
+wine <- read.csv("wineQualityReds.csv")
+```
+
+# Univariate Plots Section
+```{r echo=FALSE, Univariate_Plots}
+names(wine)
+str(wine)
+nrow(wine)
+ncol(wine)
+table(wine$quality)
+
+wine$quality <- as.factor(wine$quality)
+
+qplot(x= quality, data= wine)
+
+qplot(x= alcohol, data= wine,binwidth=.1)
+qplot(x= pH, data= wine,binwidth=0.05)
+qplot(density, data = wine,binwidth=.0005)
+
+qplot(fixed.acidity, data= wine,binwidth=.5)+
+  scale_x_continuous(breaks = seq(4,16,2))
+qplot(volatile.acidity, data= wine,binwidth=.05)+
+  scale_x_continuous(breaks = seq(0,1.6,0.2))
+
+qplot(x= log(residual.sugar), data= wine,binwidth=.1)
+qplot(x= sqrt(citric.acid), data= wine,binwidth=.05)
+
+
+
+```
+
+# Univariate Analysis
+
+### What is the structure of your dataset?
+1599 observations and 12 variables (first variable is just sequence number)
+
+### What is/are the main feature(s) of interest in your dataset?
+Normal-Like! Distribution: Quality,Density,pH
+left-skewed:fixed.acidity, volatile.acidity, citric.acid,
+                    free.sulfur.dioxide,total.sulfur.dioxide and alcohol
+
+### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+The quality of wine may be related with each of other variables
+Univariate exploration can not clearly determine the relationship between indep&depend variable
+So I need to dive into more with bivariate exploration.
+
+### Did you create any new variables from existing variables in the dataset?
+Not yet.
+
+### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+Residual.sugar has a long tail, I use log function to adjust data
+citric.acid has many zero data and long tail, I use sqrt function to concentrated data and avoid infinite number
+Also, quality is not continuous variable, so I turn it into factor type.
+
+# Bivariate Plots Section
+```{r echo=FALSE, Bivariate_Plots}
+# boxplot of independent variables for each wine quality 
+wine$X <- NULL
+for (i in 1:11){
+    print(paste("Summary of variable",names(wine)[i],"By quality"))
+    print(by(wine[,i],wine$quality, summary))
+    print("One-way ANOVA test")
+    print(summary(aov(formula(paste(names(wine)[i],"~quality", sep = "")), wine)))
+    p = qplot(x = wine$quality, y = wine[,i], geom = "boxplot") + 
+        xlab("quality") + 
+        ylab(names(wine)[i]) +
+        ggtitle(paste("Boxplots of",names(wine)[i],"By quality"))
+    plot(p)    
+}
+
+ggplot(wine,aes(factor(quality), volatile.acidity)) + 
+geom_jitter(alpha=0.3) +
+geom_boxplot( alpha = 0.5,color = 'blue')+
+stat_summary(fun.y = "mean", 
+      geom = "point", 
+      color = "red")+
+geom_smooth(method='lm', aes(group = 1))
+
+ggplot(wine,aes(factor(quality), alcohol)) + 
+geom_jitter(alpha=0.3) +
+geom_boxplot( alpha = 0.5,color = 'blue')+
+stat_summary(fun.y = "mean", 
+      geom = "point", 
+      color = "red")+
+geom_smooth(method='lm', aes(group = 1))
+
+# correlation matrix
+print("Correlation matrix for independent numeric variables")
+abs(round(cor(wine[,-c(12,13)]),3))
+```
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+According to the boxplot, we can notice that quality has a clear negative relationship with volatile.acidity and a clear positive relationship
+
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+Based on correlation matrix for dependent numeric variables, I notice that binary viriables with strong correlation coefficient are talking about same thing(free.sulfur.dioxide & total.sulfur.dioxide=0.668/fixed.acidity & citric.acid=0.672)
+
+### What was the strongest relationship you found?
+The correlation coefficient between fixed.acidity & pH is 0.683, which is the highest among all possible pairs of variables
+
+
+# Multivariate Plots Section
+
+```{r echo=FALSE, Multivariate_Plots}
+ggplot(aes(x= fixed.acidity, y= citric.acid), data = wine)+
+  geom_point(aes(color = quality))
+
+ggplot(aes(x= fixed.acidity, y= citric.acid), data = wine)+
+  geom_point(aes(color = quality))+
+  facet_wrap(~quality)+
+  ggtitle('Quantity with citric.acid and fixed.acidity')
+
+ggplot(aes(x= free.sulfur.dioxide, y= total.sulfur.dioxide ), 
+       data = wine)+
+  geom_point(aes(color = sulphates))+
+  facet_wrap(~quality)+
+  ggtitle('Quantity with free&total.sulfur.dioxide')
+
+```
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+From Bivariate Analysis, I try to combine those key variables together.
+For different quality of wine, more total.sulfur.dioxide brings more free.sulfurdioxide
+
+
+### Were there any interesting or surprising interactions between features?
+Interestly, stronger relationship between fixed/citric.acid brings higher quality of wine~!
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the strengths and limitations of your model.
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+```{r echo=FALSE, Plot_One}
+ggplot(aes(x = alcohol, y = density, color = factor(quality)), data = wine) +
+  geom_point(alpha = 0.5, size = 1, position = 'jitter') +
+  geom_smooth(method = "lm", se = FALSE,size=1) +
+  scale_color_brewer(palette = "Blues") +
+ ggtitle("quality with density and alcohol content")+
+ ylab("density (g/ml)")+
+ xlab("alcohol content (mg/L)")
+```
+
+### Description One
+alcohol content and density have a negative relationship for any quality of wine
+
+### Plot Two
+```{r echo=FALSE, Plot_Two}
+ggplot(aes(x= fixed.acidity, y= density), data = wine)+
+  geom_point(aes(color = quality))+
+  facet_wrap(~ quality)+
+  ggtitle('quality with fixed.acidity and density')
+
+
+```
+
+### Description Two
+density and fixed.acidity have a positive relationship in any quality of wine
+
+### Plot Three
+```{r echo=FALSE, Plot_Three}
+ggplot(aes(x= fixed.acidity, y= pH), data= wine)+
+  geom_jitter()+
+  geom_smooth(method = 'lm', color='red')+
+  geom_point(aes(color = quality))+
+  facet_wrap(~ quality)+
+  ggtitle('quality with fixed.acidity and pH')
+```
+
+### Description Three
+fixed.acidity and pH has a negative relationship  in any quality of wine
+------
+
+# Reflection
+We can build our relationship with a new data set by Univariate Analysis, and develop relationship by Bivariate Analysis. Multivariate Analysis may help us find deeper and more interesting information for a huge amount of data.
+The amount of data in Red Wine dataset is not huge, for this problem I applied what I learned from Udacity, so this dataset is just enough for a beginner to do some works. But I still need to study more(eg. the extra materials given by instructor) to make me better!
+Machine Learning Algorithm may help us to explore dataset, find potential rules and predict quality of new observation. So after I pick up some Machine Learning basic method from next topic in udacity, I will come back again to apply what I learned by both R and Python!
