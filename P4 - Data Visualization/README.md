@@ -12,6 +12,6 @@
 > 一开始想尽可能的运用所学，盲目地去寻求好看或者复杂的数据可视化，忽略了思考最有可能的关系，好的数据可视化是简单直接而不是复杂晦涩。
 
 ## 4.资源
-[项目中可视化主要的饼状图dimple模版](http://dimplejs.org/examples_viewer.html?id=pie_matrix)
-[Creating an Animated Ring or Pie chart in d3js](http://javascript.tutorialhorizon.com/2015/03/05/creating-an-animated-ring-or-pie-chart-in-d3js/)
-[Hover over a segment to see a custom tooltip](http://dimplejs.org/adhoc_viewer.html?id=adhoc_bar_custom_tooltips)
+[项目中可视化主要的饼状图dimple模版](http://dimplejs.org/examples_viewer.html?id=pie_matrix) <br>
+[Creating an Animated Ring or Pie chart in d3js](http://javascript.tutorialhorizon.com/2015/03/05/creating-an-animated-ring-or-pie-chart-in-d3js/)<br>
+[Hover over a segment to see a custom tooltip](http://dimplejs.org/adhoc_viewer.html?id=adhoc_bar_custom_tooltips)<br>
