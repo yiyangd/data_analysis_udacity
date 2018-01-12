@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Data Visualization of Titanic dataset </title>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+
+<!--CSS
+-->
+<style>
+body {
+	font: “x-large”;
+}
+ p{text-indent:2em}
+svg text{
+	fill:grey;
+	font-size:12px;
+}
+svg .values text{
+	pointer-events:none;
+	stroke-width: 0.5px;
+}
+.groups:hover{
+	cursor:pointer;
+	font-weight:bold;
+}
+</style>
+</head>
+
+<!--head and introduction
+-->
+
+
+<body>
+<h1 align="middle">Data Visualization of Titanic</h1>
+<h2>Description from <a href = "https://www.kaggle.com/c/titanic">kaggle.com</a></h2>
+<p>The sinking of the RMS Titanic is one of the most infamous shipwrecks in history.  On April 15, 1912, during her maiden voyage, the Titanic sank after colliding with an iceberg, killing 1502 out of 2224 passengers and crew. This sensational tragedy shocked the international community and led to better safety regulations for ships.
+</p>
+<p>One of the reasons that the shipwreck led to such loss of life was that there were not enough lifeboats for the passengers and crew. Although there was some element of luck involved in surviving the sinking, some groups of people were more likely to survive than others, such as women, children, and the upper-class.
+</p>
+
+<h2>Key Variables </h2>
+<table border="1">
+  <tr>
+    <th> Variable</th>
+    <th> Definition</th>
+  </tr>
+  <tr>
+    <td> survival</td>
+    <td> Survival</td>
+  </tr>
+  <tr>
+    <td> pclass</td>
+    <td> Ticket class</td>
+  </tr>
+  <tr>
+    <td> sex</td>
+    <td> Sex</td>
+  </tr>
+</table>
+<p>
+My interest in this dataset is the relationship between Survial Rate and Ticket class&
+</p>
+<p>
+  Following visualization will explore the survival rate in different gender and class
+
+</p>
+<h2>Interactive Design </h2>
+<p>
+Hover over a segment to see a custom tooltip:
+<ul>
+
+<li>Survival_status : Survived & Perished</li>
+<li>passenger_class : 1st, 2nd, 3rd</li>
+<li>Sex : Male & Femal</li>
+<li>passengerId : amount(percent)</li>
+</ul>
+</p>
+
+<!--Javascript and data visualization, pie chart and its reference
+-->
+<hr>
+<a href="http://dimplejs.org/examples_viewer.html?id=pie_matrix">reference from dimple.org</a>
+//
+
+<div id="chartContainer">
+<!--Creating the chart -->
+<script type="text/javascript">
+	var svg = dimple.newSvg("#chartContainer", 790, 600);
+	d3.tsv("titanic_dataset.tsv", function (data) {
+
+		var myChart = new dimple.chart(svg, data);
+		myChart.setBounds(95, 25, 675, 535);
+		myChart.addCategoryAxis("x", "passenger_class");
+		myChart.addCategoryAxis("y", "Sex");
+		myChart.addMeasureAxis("p", "PassengerId");
+    var pies = myChart.addSeries("survival_status", dimple.plot.pie);
+		pies.radius = 100;
+        myChart.getTooltipText = function (e) {
+    return [
+        e.aggField[0]
+    ]};
+		myChart.addLegend(240, 10, 330, 20, "right");
+		myChart.ease = "bounce";
+		myChart.staggerDraw = true;
+		myChart.draw(1000)
+    });
+
+
+<!--SVG to add title for legend -->
+	svg.selectAll("title_text")
+		.data(["Survival Status"])
+		.enter()
+		.append("text")
+		.attr("x", 440)
+		.attr("y", 40)
+		.style("font-family", "sans-serif")
+		.style("font-size", "10px")
+		.style("color", "Black")
+		.text(function (d) { return d; });
+
+function drawAnimatedRingChart(config) {
+    var pie = d3.layout.myChart().value(function (d) {
+		return d.count;
+	});
+}
+
+</script>
+</div>
+<hr>
+
+<!--What I found from data visualization -->
+
+<h3>Conclusion:</h3>
+<ul>
+
+<li>People in First Class are more likely to survive than people from other class</li>
+<li>Females are more likely to survive than Males</li>
+
+</ul>
+
+<!-- Last sentense of last project in Udacity -->
+<p>
+- A picture is worth more than 1000 words
+</P>
+
+</body>
+</html>
