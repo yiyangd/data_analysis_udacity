@@ -10,7 +10,7 @@
 
 ## 3.反馈：
 > 1.盲目地去寻求好看或者复杂的数据可视化，忽略了思考最有可能的关系，好的数据可视化是简单直接而不是复杂晦涩。<br>
-2.
+  2.
 
 ## 4.资源
 [项目中可视化主要的饼状图dimple模版](http://dimplejs.org/examples_viewer.html?id=pie_matrix) <br>
