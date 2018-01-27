@@ -1,4 +1,32 @@
-# Identify Fraud from Enron Email
+# Work Doc
 
-1. Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those? [relevant rubric items: “data exploration”, “outlier investigation”]<
-> aa
+1. 向我们总结此项目的目标以及机器学习对于实现此目标有何帮助。作为答案的部分，提供一些数据集背景信息以及这些信息如何用于回答项目问题。你在获得数据时它们是否包含任何异常值，你是如何进行处理的？【相关标准项：“数据探索”，“异常值调查”】
+
+> 项目概述：安然曾是 2000 年美国最大的公司之一。2002 年，由于其存在大量的企业欺诈行为，这个昔日的大集团土崩瓦解。 在随后联邦进行的调查过程中，大量有代表性的保密信息进入了公众的视线，包括成千上万涉及高管的邮件和详细的财务数据。 你将在此项目中扮演侦探，运用你的新技能，根据安然丑闻中公开的财务和邮件数据来构建相关人士识别符。 为了协助你进行侦查工作，我们已将数据与手动整理出来的欺诈案涉案人员列表进行了合并， 这意味着被起诉的人员要么达成和解，要么向政府签署认罪协议，再或者出庭作证以获得免受起诉的豁免权。
+> 机器学习：我们将给予你可读入数据的初始代码，将你选择的特征放入 numpy 数组中，该数组是大多数 sklearn 函数假定的输入表单。 你要做的就是设计特征，选择并调整算法，用以测试和评估识别符。 我们在设计数个迷你项目之初就想到了这个最终的项目，因此请记得借助你已完成的工作成果。
+> 数据集背景：在【数据集与问题】这一课第二个视频我们得知了len(enron_data)-->146个数据点，第三个视频中得知嫌疑人数量为18个，非嫌疑人数量为128个，特征数量为20个，其中财务特征有14个，财务特征: \['salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees'] (单位均是美元）,邮件特征: \['to_messages', 'email_address', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi'] (单位通常是电子邮件的数量，明显的例外是 ‘email_address’，这是一个字符串）
+> 异常值：在第【异常值】这一课最后一个视频中我们得知特征“TOTAL”并非一个具体的特征值，而是一个总和，所以要使用data_dict.pop('TOTAL',0)删除掉这个特征值。视频学习中还提到了两个“异常值”，LAY KENNETH L和SKILLING JEFFREY K，但根据背景了解得知他们是公司高管，也是最大的嫌疑人，故他们并不是异常值，不删除。
+
+
+2. 你最终在你的 POI 标识符中使用了什么特征，你使用了什么筛选过程来挑选它们？你是否需要进行任何缩放？为什么？作为任务的一部分，你应该尝试设计自己的特征，而非使用数据集中现成的——解释你尝试创建的特征及其基本原理。（你不一定要在最后的分析中使用它，而只设计并测试它）。在你的特征选择步骤，如果你使用了算法（如决策树），请也给出所使用特征的特征重要性；如果你使用了自动特征选择函数（如 SelectBest），请报告特征得分及你所选的参数值的原因。【相关标准项：“创建新特征”、“适当缩放特征”、“智能选择功能”】
+
+> 特征使用：
+
+在“特征选择”步骤中我使用了自动特征选择函数SelectKBest来查看所有特征的评分，并最终将得分低于2.0的特征去除，某些缺失值比较多的特征也予以去除（比如“loan_advances”），其他特征均予以保留。上图为最终保留的特征和各自的得分。另外从图中可以看出之前创建的两个新特征性能还是有很大差异的，from_this_person_to_poi_ratio分数超过12.5分，然而from_poi_to_this_person_ratio仅仅只有约2.5分。看来当事人发给POI的邮件占总发送量的比例很能说明问题。
+
+
+3. 你最终使用了什么算法？你还尝试了其他什么算法？不同算法之间的模型性能有何差异？【相关标准项：“选择算法”】
+> 我最终使用了SVM算法，我尝试了NB，DT，和Adaboost算法，
+
+
+4. 调整算法的参数是什么意思，如果你不这样做会发生什么？你是如何调整特定算法的参数的？（一些算法没有需要调整的参数 – 如果你选择的算法是这种情况，指明并简要解释对于你最终未选择的模型或需要参数调整的不同模型，例如决策树分类器，你会怎么做）。【相关标准项：“调整算法”】
+> 在【支持向量机（SVM）】课程学习的最后我学习到了调整算法的参数是指面对不同的问题与条件选择不同的分类器（算法）和参数（使得算法performance更好），如果不调参，会引发过拟合或者分类能力差等影响。
+> 在【支持向量机（SVM）】课程中我还学习到了手动调参任务量大，所以我学习了GridCV（自动查找最优参数调整的sklearn工具），同样我还学习了Pipeline
+
+
+
+5. 什么是验证，未正确执行情况下的典型错误是什么？你是如何验证你的分析的？【相关标准项：“验证策略”】
+>
+
+6. 给出至少 2 个评估度量并说明每个的平均性能。解释对用简单的语言表明算法性能的度量的解读。【相关标准项：“评估度量的使用”】
+> 使用tester.py评估性能时，我得知了
