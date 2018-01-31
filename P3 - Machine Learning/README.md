@@ -45,3 +45,5 @@ estimate_classifier()函数的原理：首先通过StratifiedShuffleSplit算法�
 
 Reference
 [关于F1_score](http://blog.csdn.net/simplelovecs/article/details/50520602)
+
+PYTHON机器学习，第六章 模型评估与参数调优实战
