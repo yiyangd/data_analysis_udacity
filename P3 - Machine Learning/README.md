@@ -51,4 +51,4 @@
 Reference
 [关于F1_score](http://blog.csdn.net/simplelovecs/article/details/50520602)  
 [关于模型评估](https://ryannng.github.io/2016/12/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%AA%8C%E8%AF%81/)  
-[《PYTHON机器学习》，第六章 模型评估与参数调优实战](https://book.douban.com/subject/27000110/）
+[Python机器学习](https://book.douban.com/subject/27000110/)
