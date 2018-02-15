@@ -1,3 +1,3 @@
 # data_analysis_udacity
 the notes and codes I took as a DA beginner  
-[NanoDegree](https://printer.udacity.com/certificate/nd002-cn-advanced)
+![Degree](http://github.com/yiyangd/data_analysis_udacity/images/nd002-cn-advanced.jpg)
